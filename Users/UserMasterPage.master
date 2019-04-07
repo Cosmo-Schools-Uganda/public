@@ -1,0 +1,850 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeFile="UserMasterPage.master.cs" Inherits="Users_UserMasterPage" %>
+
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+
+    <title>Cosmo</title>
+
+    <link rel="icon" type="image/gif" href="../App_Data/logopart2.gif" />
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link href="//Localhost/CosmoSchools/Content/Cosmo.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap.css" rel="stylesheet" runat="server" />
+    <link href="//Localhost/CosmoSchools/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="//Localhost/CosmoSchools/Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="//Localhost/CosmoSchools/Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="//Localhost/CosmoSchools/Content/bootstrap-social-gh-pages/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="//Localhost/CosmoSchools/Content/bootstrap-social-gh-pages/assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="//Localhost/CosmoSchools/Content/bootstrap-social-gh-pages/bootstrap-social.css" rel="stylesheet" />
+    
+
+    <%--<link href="../Content/metro.css" rel="stylesheet" />--%>
+
+    <%--<script src="../Scripts/metro.js"></script>--%>
+    <script src="//Localhost/CosmoSchools/Scripts/jquery-3.1.1.js"></script>
+    <script src="//Localhost/CosmoSchools/Scripts/jquery-3.1.1.min.js"></script>
+    <%--BootStrap and JQuery Links--%>
+    <script src="//Localhost/CosmoSchools/Scripts/bootstrap.min.js"></script>
+    <script src="//Localhost/CosmoSchools/Scripts/jquery.min.js"></script>
+    <script src="//Localhost/CosmoSchools/Scripts/moment.js"></script>
+    <script src="//Localhost/CosmoSchools/Scripts/bootstrap-datetimepicker.min.js"></script>
+
+    
+
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+
+    <style type="text/css">
+        #nav {
+            list-style: none;
+            margin: 0px;
+            padding: 0px;
+        }
+
+            #nav li {
+                float: left;
+                margin-right: 20px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+        /*Added css for design notification area, you can design by your self*/
+        /* COPY css content from youtube video description*/
+        #notification_li, #msg_li {
+            position: relative;
+        }
+
+        #notificationContainer, #msgContainer {
+            background-color: #fff;
+            border: 1px solid rgba(100, 100, 100, .4);
+            -webkit-box-shadow: 0 3px 8px rgba(0, 0, 0, .25);
+            overflow: visible;
+            position: absolute;
+            top: 25px;
+            margin-left: -370px;
+            min-width: 400px;
+            width: 400px;
+            z-index: 10;
+            display: none;
+        }
+
+        Popup Arrow #notificationContainer:before {
+            content: '';
+            display: block;
+            position: absolute;
+            width: 0;
+            height: 0;
+            color: transparent;
+            border: 10px solid black;
+            border-color: transparent transparent white;
+            margin-top: -20px;
+            margin-left: 188px;
+        }
+
+        #notificationTitle, #msgTitle {
+            font-weight: bold;
+            padding: 8px;
+            font-size: 13px;
+            background-color: #ffffff;
+            position: relative;
+            z-index: 1000;
+            width: 384px;
+            border-bottom: 1px solid #dddddd;
+        }
+
+        #notificationsBody, #msgBody {
+            padding: 0px 0px 0px 0px !important;
+            min-height: 0px;
+            min-width: inherit;
+            max-height: 300px;
+            width: inherit;
+            overflow: auto;
+            overflow-y: auto;
+        }
+
+            #notificationsBody::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                background-color: #F5F5F5;
+            }
+
+            #notificationsBody::-webkit-scrollbar {
+                width: 6px;
+                background-color: #F5F5F5;
+            }
+
+            #notificationsBody::-webkit-scrollbar-thumb {
+                background-color: #000000;
+                border-radius: 10px;
+            }
+
+            #msgBody::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                background-color: #F5F5F5;
+            }
+
+            #msgBody::-webkit-scrollbar {
+                width: 6px;
+                background-color: #F5F5F5;
+            }
+
+            #msgBody::-webkit-scrollbar-thumb {
+                background-color: #000000;
+                border-radius: 10px;
+            }
+
+
+        #notificationFooter, #msgFooter {
+            background-color: #e9eaed;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            font-size: 12px;
+            border-top: 1px solid #dddddd;
+        }
+
+
+
+        #notification_count, #msg_count {
+            padding: 3px 7px 3px 7px;
+            background: #cc0000;
+            color: #ffffff;
+            font-weight: bold;
+            /*margin-left: 77px;*/
+            border-radius: 9px;
+            -moz-border-radius: 9px;
+            -webkit-border-radius: 9px;
+            position: absolute;
+            /*margin-top: -11px;*/
+            font-size: 11px;
+        }
+
+        .NotificationLogo, .SenderLogo {
+            padding: 0px 5px 0px 10px;
+            width: 100%;
+            height: 60px;
+        }
+
+        #ProfileLogo {
+            padding: 0px;
+            display: block;
+            max-width: 60px;
+            max-height: 60px;
+            width: auto;
+            height: auto;
+        }
+
+        .profileimg :hover {
+            -webkit-box-shadow: 0 0 20px rgba(255,255,255,.6), inset 0 0 20px rgba(255,255,255,1);
+            -moz-box-shadow: 0 0 20px rgba(255,255,255,.6), inset 0 0 20px rgba(255,255,255,1);
+            box-shadow: 0 0 20px rgba(255,255,255,.6), inset 0 0 20px rgba(255,255,255,1);
+            -webkit-border-radius: 60em;
+            -moz-border-radius: 60em;
+            border-radius: 60em;
+        }
+
+        .msgs > .row, .notifications > .row {
+            position: relative;
+            min-height: 100px;
+            min-width: 98%;
+            width: inherit;
+            padding: 5px 0px 5px 0px;
+            margin: 5px 0px 5px 0px;
+            /*background-color:rgba(219, 222, 211,0.5);*/
+            /*border: 1px solid grey;*/
+            left: 15px;
+        }
+
+        .profileimg {
+            display: block;
+            max-width: 180px;
+            max-height: 90px;
+            min-width: 100px;
+            height: auto;
+        }
+        /*.notifications > .row :hover .notifications
+        {
+
+             background-color:rgba(45, 46, 45, 0.20);
+
+        }*/
+
+        #User > span {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 14px;
+        }
+
+        #MessageRow {
+            position: relative;
+            margin: 2px;
+            min-height: 50px;
+        }
+
+        #InfoDetails {
+            position: relative;
+            margin: 2px;
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        /*::-webkit-scrollbar {
+    width: 12px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}*/
+
+        .controlobject {
+            height: 100%;
+            border-bottom: 1px solid #e7ebee;
+            position: relative;
+        }
+
+            .controlobject:hover {
+                background: #f1f4f6;
+                cursor: pointer;
+            }
+
+            .controlobject img {
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+                margin: 5px;
+            }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="form1" runat="server">
+
+
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigationa</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="Home.aspx">C<sub>s</sub>P</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <asp:ContentPlaceHolder runat="server" ID="HomeLink"><a href="#">Home</a></asp:ContentPlaceHolder>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">About US <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Background</a></li>
+                            <li><a href="#">Services</a></li>
+                            <li><a href="#">Customer Care</a></li>
+
+                        </ul>
+
+
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search"/>
+                        </div>
+                       
+                    </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="#" style="right: 10px;"><span class="glyphicon glyphicon-user"></span>
+                        <asp:ContentPlaceHolder ID="UserName" runat="server">&nbsp<span runat="server" id="UserNameLabel"></span></asp:ContentPlaceHolder>
+                    </a></li>
+
+                </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+            <!-- /.container-fluid -->
+        </nav>
+
+        <div class="jumbotron">
+
+            <div class="row">
+                <div class="col-md-2">
+                </div>
+                <div class="col-md-8">
+                    <h1 runat="server" class="page-header text-center">Cosmo-Schools Platform <small>
+                        <asp:ContentPlaceHolder ID="JumbHeader" runat="server">Teachers</asp:ContentPlaceHolder>
+                    </small></h1>
+
+
+                </div>
+
+                <div class="col-md-2">
+
+                    <asp:ContentPlaceHolder runat="server" ID="ProfilePicture">
+                        <div class="dropdown">
+                            <a href="#" class="btn-link btn-block dropdown-toggle" data-toggle="dropdown">
+
+                                <asp:Image CssClass="img-circle pull-right profileimg" runat="server" ID="ProfPicture" ImageUrl="~/Images/Users/Unknown-person2.gif" Style="position: relative; height: 100px; right: 10px; width: auto; top: 50px;" />
+                            </a>
+
+                            <ul class="dropdown-menu dropdown-toggle" runat="server" id="PageSelector" style="top: 148px;" role="menu">
+
+                                <li class="divider"></li>
+                                <li><a href="#"><span class="glyphicon glyphicon-cog"></span>&nbsp Settings</a></li>
+                                <li><a runat="server" id="LogoutLink" onserverclick="LogoutLink_ServerClick"><span class="glyphicon glyphicon-off"></span>&nbsp Log Out</a></li>
+                            </ul>
+                        </div>
+
+
+
+                    </asp:ContentPlaceHolder>
+                </div>
+            </div>
+
+            <div class="row" style="position: absolute; top: 170px; width: 100%;">
+
+                <div class="col-md-4">
+                </div>
+
+                <br />
+                <br />
+
+                <div class="col-md-8">
+
+
+                    <ul id="nav" class="pull-right">
+
+                        <li id="msg_li">
+
+
+                            <a href="#" id="msglink"><span class="glyphicon glyphicon-envelope" style="font-size: medium;"></span></a>
+
+                            <div id="msgContainer">
+                                <div id="msgTitle">Inbox</div>
+                                <div id="msgBody">
+                                    <table class="table table-hover msgs">
+                                    </table>
+                                </div>
+
+                                <div id="msgFooter"><a href="http://localhost/CosmoSchools/Messages.aspx">See All</a></div>
+                            </div>
+
+                        </li>
+
+                        <li id="notification_li">
+
+                            <a href="#" id="notificationLink"><span class="glyphicon glyphicon-bell" style="font-size: medium;"><span id="notification_count" hidden="hidden"></span></span></a>
+
+                            <div id="notificationContainer">
+                                <div id="notificationTitle">Notifications</div>
+                                <div id="notificationsBody">
+                                    <table class="table table-hover notifications">
+                                    </table>
+                                </div>
+
+                                <div id="notificationFooter"><a href="#">See All</a></div>
+                            </div>
+
+                        </li>
+
+                    </ul>
+
+
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+
+
+    <form runat="server">
+
+
+        <asp:ScriptManager EnablePartialRendering="true" ID="UserScript" EnablePageMethods="true" runat="server"></asp:ScriptManager>
+
+
+        <asp:ContentPlaceHolder ID="body" runat="server">
+        </asp:ContentPlaceHolder>
+
+    </form>
+
+
+    <script src="//Localhost/CosmoSchools/Scripts/jquery-3.1.1.js"></script>
+    <script src="//Localhost/CosmoSchools/Scripts/jquery-3.1.1.min.js"></script>
+
+
+    <script src="//Localhost/CosmoSchools/Scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="//Localhost/CosmoSchools/signalr/hubs"></script>
+
+
+    <%--    @* Add jquery code for Get Notification & setup signalr *@--%>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $(".SenderLogo").on("error", function () {
+                $(this).attr('alt', "No Profile Image Found");
+                $(this).attr('src', '/Users/Images/NoImage.png');
+            });
+
+
+
+            $("#notificationLink").click(function () {
+
+                if ($("#msgContainer").show()) {
+
+                    $("#msgContainer").hide();
+
+                }
+
+                $("#notificationContainer").fadeToggle(300);
+                $("#notification_count").fadeOut("slow");
+
+
+
+                return false;
+            });
+
+
+
+            $("#msglink").click(function () {
+
+                if ($("#notificationContainer").show()) {
+
+                    $("#notificationContainer").hide();
+
+                }
+
+                $("#msgContainer").fadeToggle(300);
+                $("#msg_count").fadeOut("slow");
+                return false;
+            });
+
+            //Document Click hiding the popup 
+            $(document).click(function () {
+                $("#notificationContainer").hide();
+                $("#msgContainer").hide();
+            });
+
+            //Popup on click
+            $("#notificationContainer").click(function () {
+                return false;
+            });
+
+        });
+
+        function notifyMe(Message) {
+            // Let's check if the browser supports notifications
+            if (!("Notification" in window)) {
+                alert("This browser does not support desktop notification");
+            }
+
+                // Let's check whether notification permissions have already been granted
+            else if (Notification.permission === "granted") {
+                // If it's okay let's create a notification
+                var notification = new Notification(Message);
+            }
+
+                // Otherwise, we need to ask the user for permission
+            else if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
+                    // If the user accepts, let's create a notification
+                    if (permission === "granted") {
+                        var notification = new Notification(Message);
+                    }
+                });
+            }
+
+            // At last, if the user has denied notifications, and you 
+            // want to be respectful there is no need to bother them any more.
+        }
+
+
+
+        $(function () {
+
+            var notification = $.connection.notificationHub;
+            var chat = $.connection.chatHub;
+
+            //New Message Alerts
+            chat.client.newMessage = function (message) {
+                if (message != null && message.toLowerCase() == "new message") {
+
+                    chat.server.getMessages();
+
+                }
+            }
+
+            //New Notification Alerts
+            notification.client.newnotification = function (message) {
+
+                if (message && message.toLowerCase() == "added") {
+
+                    updateNotificationCount();
+                    notification.server.requestnotifications(15);
+                    console.log(message);
+
+                }
+            }
+
+            //ReceiveIncomingNotifications
+
+            notification.client.receivenotifications = function (data) {
+
+                var NotificationsList = data;
+
+                //notifyMe("Hi Stek");
+
+
+                $('.notifications').children().remove();
+
+                for (var i = 0; i < NotificationsList.length; i++) {
+
+                    var NotificationObject = NotificationsList[i];
+
+                    console.log(NotificationObject);
+
+                    try {
+
+                        $('.notifications').append
+
+                            (
+                                         '<tr class="row btn-link controlobject"><td id="datarow">' +
+
+                                                '<div class="col-md-2" id="ProfileLogo">' +
+                                               ' <img class="NotificationLogo" src="data:image/png;base64,' + NotificationObject.Sender["ProfilePictureByte"] + '"/>'
+                                                +
+                                                '</div>' +
+
+                                                '<div class="col-md-10">' +
+
+                                                  '<div class="row" id="MessageRow">' +
+
+                                                  '<a href="#"><span style="color:black; font-weight:bold; font-size:12px;">' + NotificationObject.Message + '</span></a>'
+
+                                                   + '</div>' +
+
+                                                    '<div class="row" id="InfoDetails">' +
+
+                                                        '<div class="col-md-9" id="User">' +
+
+
+                                                        '<span style="position:relative; right:10px;">' + 'by ' + NotificationObject.Sender["FirstName"] + ' ' + NotificationObject.Sender["LastName"] + '</span>'
+
+                                                        + '</div>' +
+
+                                                        '<div class="col-md-3" id="Time">' +
+
+                                                        '</div>' +
+                                                    '</div>' +
+
+                                                '</div>' +
+
+                                            '</td></tr>');
+
+                    }
+                    catch (ex) {
+
+                    }
+
+                }
+            }
+
+
+            //ReceiveIncomingMessages
+
+            chat.client.receiveIncomingMessages = function (data) {
+
+                var messageList = data;
+
+                $('.msgs').children().remove();
+
+                for (var i = 0; i < messageList.length; i++) {
+
+                    var MessageObject = messageList[i];
+
+
+
+                    console.log(MessageObject);
+
+
+                    try {
+                        //$('.SenderLogo').preload({
+                        //    placeholder: '~/Users/Images/NoImage.png',
+                        //    notFound: '~/Users/Images/NoImage.png'
+                        //});
+
+
+                        $('.msgs').append
+
+
+                            (
+                                         '<tr class="row btn-link controlobject"><td id="datarow">' +
+
+                                                '<div class="col-md-2" id="ProfileLogo">' +
+
+                                             ' <img class="SenderLogo" src="data:image/png;base64,' + MessageObject.Sender["ProfilePictureByte"] + '"/>'
+                                                +
+                                                '</div>' +
+
+                                                '<div class="col-md-10">' +
+
+                                                  '<div class="row" id="MessageRow">' +
+
+                                                  '<a href="#"><span style="color:black; font-weight:bold; font-size:12px;">' + MessageObject.Message + '</span></a>'
+
+                                                   + '</div>' +
+
+                                                    '<div class="row" id="InfoDetails">' +
+
+                                                        '<div class="col-md-9" id="User">' +
+
+
+                                                        '<span style="position:relative; right:10px;">' + 'From ' + MessageObject.Sender["FirstName"] + ' ' + MessageObject.Sender["LastName"] + '</span>'
+
+                                                        + '</div>' +
+
+                                                        '<div class="col-md-3" id="Time">' +
+
+                                                        '</div>' +
+                                                    '</div>' +
+
+                                                '</div>' +
+
+                                            '</td></tr>');
+
+                    }
+                    catch (ex) {
+
+                    }
+
+
+
+                }
+            }
+
+            //MiniMessagesSender
+
+            $(".controlobject").each(function () {
+                $(this).click(function () {
+                    var childOffset = $(this).offset();
+                    var parentOffset = $(this).parent().parent().offset();
+                    var childTop = childOffset.top - parentOffset.top;
+                    var clone = $(this).find('img').eq(0).clone();
+                    var top = childTop + 12 + "px";
+
+                    $(clone).css({ 'top': top }).addClass("floatingImg").appendTo("#chatbox");
+
+                    setTimeout(function () { $("#profile p").addClass("animate"); $("#profile").addClass("animate"); }, 100);
+                    setTimeout(function () {
+                        $("#chat-messages").addClass("animate");
+                        $('.cx, .cy').addClass('s1');
+                        setTimeout(function () { $('.cx, .cy').addClass('s2'); }, 100);
+                        setTimeout(function () { $('.cx, .cy').addClass('s3'); }, 200);
+                    }, 150);
+
+                    $('.floatingImg').animate({
+                        'width': "68px",
+                        'left': '108px',
+                        'top': '20px'
+                    }, 200);
+
+                    var name = $(this).find("p strong").html();
+                    var email = $(this).find("p span").html();
+                    $("#profile p").html(name);
+                    $("#profile span").html(email);
+
+                    $(".message").not(".right").find("img").attr("src", $(clone).attr("src"));
+                    $('#friendslist').fadeOut();
+                    $('#chatview').fadeIn();
+
+
+                    $('#close').unbind("click").click(function () {
+                        $("#chat-messages, #profile, #profile p").removeClass("animate");
+                        $('.cx, .cy').removeClass("s1 s2 s3");
+                        $('.floatingImg').animate({
+                            'width': "40px",
+                            'top': top,
+                            'left': '12px'
+                        }, 200, function () { $('.floatingImg').remove() });
+
+                        setTimeout(function () {
+                            $('#chatview').fadeOut();
+                            $('#friendslist').fadeIn();
+                        }, 50);
+                    });
+
+                });
+            });
+
+
+            // Click on notification icon for show notification
+
+            $('span.noti').click(function (e) {
+
+                e.stopPropagation();
+
+                $('.noti-content').show();
+
+                var count = 0;
+
+                count = parseInt($('span.count').html()) || 0;
+
+                //only load notification if not already loaded
+
+                if (count > 0) {
+                    updateNotification();
+                }
+
+
+                $('span.count', this).html('&nbsp;');
+
+
+
+                $('span.count').show();
+            })
+
+            // hide notifications
+            $('html').click(function () {
+                $('.noti-content').hide();
+
+            });
+
+            // update notification
+            function updateNotification() {
+
+                $('.count').hide();
+
+                $('#notiContent').empty();
+
+                // notification.server.requestnotifications(15);
+
+                //$('#notiContent').append($('<li>Loading...</li>'));
+
+
+            }
+
+
+            // update notification count
+            function updateNotificationCount() {
+
+                var count = 0;
+
+                $("#notification_count").fadeIn("slow");
+
+                count = parseInt($('#notification_count').html()) || 0;
+
+
+
+                if (count < 20) {
+
+                    count++;
+                    $('#notification_count').html(count);
+                }
+                else {
+
+                    $('#notification_count').text("20+");
+                }
+
+
+            }
+            // signalr js code for start hub and send receive notification
+
+
+            $.connection.hub.start().done(function () {
+
+                console.log('Notification hub started');
+
+                notification.server.requestnotifications(15);
+
+
+                console.log('Chat hub started');
+
+                chat.server.getMessages();
+
+                $.connection.hub.logging = true;
+
+
+            });
+
+
+            //signalr method for push server message to client
+
+        });
+
+    </script>
+</body>
+</html>

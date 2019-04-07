@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Dictionary</name>
+    </assembly>
+    <members>
+        <member name="T:DictionaryLibrary.DictionaryMaker">
+            <summary>
+            Makes a dictionary out of a given object.
+            </summary>
+        </member>
+        <member name="M:DictionaryLibrary.DictionaryMaker.Make(System.Object)">
+            <summary>
+            Makes a dictionary out of the properties of the given input.
+            </summary>
+            <param name="input">Object to make a dictionary out of</param>
+            <returns>
+            A dictionary with the keys being the input object property names and the values their respective values
+            </returns>
+        </member>
+        <member name="M:DictionaryLibrary.DictionaryMaker.MakeWithType(System.Object)">
+            <summary>
+            Makes a dictionary out of the properties of the given input.
+            </summary>
+            <param name="input">Object to make a dictionary out of</param>
+            <returns>
+            A dictionary with the keys being the input object property names and the values their respective types and
+            values
+            </returns>
+        </member>
+    </members>
+</doc>

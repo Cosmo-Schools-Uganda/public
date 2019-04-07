@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ConnectionString</name>
+    </assembly>
+    <members>
+        <member name="T:ConnectionStringLibrary.ConnectionStringReader">
+            <summary>
+            Reads and checks connection strings.
+            </summary>
+        </member>
+        <member name="M:ConnectionStringLibrary.ConnectionStringReader.Read(System.String)">
+            <summary>
+            Reads a connection string.
+            </summary>
+            <param name="connectionStringName">Name of the connection string to read</param>
+            <returns>The read connection string settings</returns>
+            <exception cref="T:System.ArgumentNullException">An null connectionStringName was given</exception>
+            <exception cref="T:ConnectionStringLibrary.NoSuchConnectionStringException">
+            A connection string with the provided name doesn't exist
+            </exception>
+            <exception cref="T:ConnectionStringLibrary.EmptyConnectionStringException">Found an empty connection string</exception>
+            <exception cref="T:ConnectionStringLibrary.EmptyProviderNameException">Found an empty provider name</exception>
+        </member>
+        <member name="M:ConnectionStringLibrary.ConnectionStringReader.Check(System.Configuration.ConnectionStringSettings)">
+            <summary>
+            Checks if the connection string and the data provider are not empty.
+            </summary>
+            <param name="cs">Connection string settings to check</param>
+            <exception cref="T:System.ArgumentNullException">An null ConnectionStringSettings was given</exception>
+            <exception cref="T:ConnectionStringLibrary.EmptyConnectionStringException">Found an empty connection string</exception>
+            <exception cref="T:ConnectionStringLibrary.EmptyProviderNameException">Found an empty provider name</exception>
+        </member>
+        <member name="T:ConnectionStringLibrary.ConnectionStringReadingException">
+            <summary>
+            Something exceptional happened while reading a connection string.
+            </summary>
+        </member>
+        <member name="T:ConnectionStringLibrary.EmptyConnectionStringException">
+            <summary>
+            Found an empty connection string.
+            </summary>
+        </member>
+        <member name="T:ConnectionStringLibrary.EmptyProviderNameException">
+            <summary>
+            Found an empty provider name.
+            </summary>
+        </member>
+        <member name="T:ConnectionStringLibrary.NoSuchConnectionStringException">
+            <summary>
+            A connection string with the provided name doesn't exist.
+            </summary>
+        </member>
+    </members>
+</doc>

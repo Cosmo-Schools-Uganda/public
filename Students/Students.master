@@ -1,0 +1,194 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true"  CodeFile="Students.master.cs" Inherits="Students_MasterPage" %>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title runat="server" id="PageTitle">Cosmo</title>
+    
+    <%--Bootstrap and Site CSS--%>
+
+   <link href="../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="../Content/bootstrap-theme.min.css" rel="stylesheet" />
+    <link href="../Content/bootstrap-datetimepicker.css" rel="stylesheet" />
+    <link href="../Content/bootstrap-social-gh-pages/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="../Content/bootstrap-social-gh-pages/assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="../Content/bootstrap-social-gh-pages/bootstrap-social.css" rel="stylesheet" />
+
+
+      <script src="../Scripts/jquery-3.1.1.js"></script>
+    <script src="../Scripts/jquery-3.1.1.min.js"></script>
+    <%--BootStrap and JQuery Links--%>
+      <script src="../Scripts/bootstrap.min.js"></script>
+    <script src="../Scripts/jquery.min.js"></script>
+    <script src="../Scripts/moment.js"></script>
+    <script src="../Scripts/bootstrap-datetimepicker.min.js"></script>
+    
+
+    <asp:ContentPlaceHolder id="head" runat="server">
+       
+<style>
+    
+         .affix 
+
+         {
+      top: 10px;
+      width: 100%;
+
+         }
+
+  .affix + .container-fluid 
+  
+  {
+      padding-top: 70px;
+  }
+
+        @media(max-width:767px)
+        {
+        
+
+        }
+
+        a:hover
+        {
+
+            text-decoration:none;
+
+        }
+
+        .media-profiles
+        {
+
+            height:80px;
+            width:80px;
+
+        }
+      
+        .thumbnail:hover
+        {
+           
+        box-shadow: rgba(0,0,0,.2) 3px 5px 5px;
+ 
+        }
+
+        .mine{
+            position:relative;
+            z-index:100;
+        }
+
+        .ProfileMenu
+        {
+
+          
+
+        }
+
+    </style>
+
+        
+     
+    </asp:ContentPlaceHolder>
+
+    
+</head>
+<body>
+    <form id="form1" runat="server">
+  
+        
+            <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                        <span class="sr-only">Toggle navigationa</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">C<sub>s</sub>P</a>
+                </div>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="Students_Default.aspx">Home</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">About US <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Background</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Customer Care</a></li>
+
+                            </ul>
+
+                        </li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Action</a></li>
+                                <li><a href="#">Another action</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">One more separated link</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <%--    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>--%>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#" style="right: 10px;"><span class="glyphicon glyphicon-user"></span>&nbsp<span  runat="server" id="UserNameLabel"></span></a></li>
+
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+                <!-- /.container-fluid -->
+            </nav>
+
+            <div class="jumbotron">
+
+                <div class="row">
+                    <div class="col-md-2">
+                    </div>
+                    <div class="col-md-8">
+                        <h1 runat="server" class="page-header text-center">Cosmo-Schools Platform <small><asp:ContentPlaceHolder ID="JumbHeader" runat="server">Students</asp:ContentPlaceHolder></small></h1>
+                        <h2 runat="server" class="page-header text-center" id="SchoolName"></h2>
+
+                    </div>
+                    <div class="col-md-2">
+                        <div class="dropdown">
+                            <a href="#" class="btn-link btn-block dropdown-toggle" data-toggle="dropdown">
+                               
+                                      <asp:Image CssClass="img-circle pull-right profileimg" runat="server" ID="ProfPicture" ImageUrl="~/Images/Users/Unknown-person2.gif" Style="position: relative; height: 100px; right: 10px; width: auto; top: 50px;" />
+                               
+                              </a>
+                            <ul class="dropdown-menu dropdown-toggle" runat="server" id="PageSelector" style="top:148px;" role="menu">
+                               <li><a href="../UserPage.aspx">My Page</a></li>
+                                <li class="divider"></li>
+                              
+                                <li><a runat="server" id="LogoutLink" onserverclick="LogoutLink_ServerClick"><span class="glyphicon glyphicon-off"></span>&nbsp Log Out</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </div>
+            <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+
+        <asp:ContentPlaceHolder id="body" runat="server">
+      
+        
+        </asp:ContentPlaceHolder>
+
+    </form>
+</body>
+</html>

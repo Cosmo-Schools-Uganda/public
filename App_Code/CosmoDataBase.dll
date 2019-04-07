@@ -1,0 +1,594 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+
+namespace Cosmo_Test_App
+{
+    class DataBase
+    {
+        
+        public SqlConnection Con;
+        private SqlCommand Com;
+        private SqlDataReader Reader;
+        private string Query = string.Empty;
+
+        public struct QuestionStructure
+        {
+            private int QNumber;
+            private string Qst;
+            private int QstType;
+            private object[] Objs;
+
+            public int QuestionNumber
+            {
+                get
+                {
+                    return QNumber;
+                }
+                set
+                {
+                    QNumber = value;
+                }
+            }
+
+            public string Question
+            {
+                get
+                {
+                    return Qst;
+                }
+                set
+                {
+                    Qst = value;
+                }
+
+            }
+
+            public int QuestionType
+            {
+                get
+                {
+                    return QstType;
+                }
+                set
+                {
+                    QstType = value;
+                }
+            }
+
+            public Object[] Objectives
+            {
+                get
+                {
+                    return Objs;
+                }
+                set
+                {
+                    Objs = value;
+                }
+            }
+        }
+            
+
+        private bool CreateConnection()
+        {
+            Con = new SqlConnection();
+           
+
+            if (Con.State == ConnectionState.Open)
+            {
+                return true;
+                Con.Close();
+                
+            }
+            else
+            {
+                return false;
+            }
+
+            Con.Open();
+        }
+
+        internal class Questions
+        {
+
+            internal class ObjectivesContent
+            {
+
+                public string Detail { get; set; }
+             
+                public int validity { get; set; }
+            }
+
+            
+            DataTable Dt;
+            DataBase Db = new DataBase();
+            GlobalConnection GC = new GlobalConnection();    
+           
+            private int questionNumber;
+            private string Question;
+            private int Question_Type;
+            private string TestCode;
+            private DataSet Ds =new DataSet();
+            QuestionStructure Qs;
+
+            public Questions()
+            {
+                
+            }
+
+
+            public QuestionStructure QuestionSructure
+            {
+                get
+                {
+                    return Qs;
+                }
+            }
+
+            public int MyQuestionNumber
+            {
+                get
+                {
+                    return questionNumber;
+                }
+            }
+            public DataSet DataSet
+            {
+                get
+                {
+                    return Ds;
+                }
+            }
+         
+            public Questions(string TestCode)
+            {
+                this.TestCode = TestCode;
+
+                Dt = new DataTable("QuestionnaireTable");
+
+                Dt.Columns.Add("Question Number", typeof(int));
+                Dt.Columns.Add("Question", typeof(string));
+                Dt.Columns.Add("Question Type", typeof(int));
+                Dt.Columns.Add("Objective Data", typeof(object[]));
+
+                Ds.Tables.Add(Dt);
+
+            }
+
+            public void CaptureQuestionData(DataBase.QuestionStructure Qs)
+            {
+                using (var Con = new SqlConnection(GC.ConnectionString))
+                {
+                    Con.Open();
+
+                    string Query = "[dbo].[CaptureQuestion]";
+
+                    using (var com = new SqlCommand(Query, Con))
+                    {
+                        com.CommandType = CommandType.StoredProcedure;
+
+                        com.Parameters.Add(new SqlParameter("@TestCode", this.TestCode));
+                        com.Parameters.Add(new SqlParameter("@QuestionType", Qs.QuestionType));
+                        com.Parameters.Add(new SqlParameter("@QuestionNumber", Qs.QuestionNumber));
+                        com.Parameters.Add(new SqlParameter("@Question", Qs.Question));
+                        com.Parameters.Add(new SqlParameter("@imagepath", null));
+
+                        com.ExecuteNonQuery();
+
+                        com.Dispose();
+                    }
+
+                    Con.Close();
+                    
+                }
+
+                if (Qs.QuestionType == 1)
+                {
+                
+                }
+
+                else
+                {
+                   
+                    foreach (ObjectivesContent OC in Qs.Objectives)
+                    {
+                            using (var con = new SqlConnection(GC.ConnectionString))
+                            {
+                                con.Open();
+
+                                string query = "[dbo].[AddObjectives]";
+
+                                using (var com = new SqlCommand(query, con))
+                                {
+                                    com.CommandType = CommandType.StoredProcedure;
+
+                                    com.Parameters.Add(new SqlParameter("@setcode", this.TestCode));
+                                    com.Parameters.Add(new SqlParameter("@qtn_number", Qs.QuestionNumber));
+                                    com.Parameters.Add(new SqlParameter("@objective", OC.Detail));
+                                    com.Parameters.Add(new SqlParameter("@validation", OC.validity));
+
+                                    com.ExecuteNonQuery();
+                                }
+                             }
+
+                    }
+
+                }
+
+            }
+
+
+            public bool RetrieveData(int QuestionNumber)
+            {
+
+                if (CheckForQuestionExistance(this.TestCode, QuestionNumber))
+                {
+                    using (var Con = new SqlConnection(GC.ConnectionString))
+                    {
+                        //                    Db.CreateConnection();
+
+                        Con.Open();
+
+                        string Query = "Select qtn_number,detail,qtn_type from Temporary_Questions inner join Tests on Temporary_Questions.set_id=Tests.set_id where Tests.set_id=(select Tests.set_id from tests where Tests.Test_code='" + this.TestCode + "') and Temporary_Questions.qtn_number='" + QuestionNumber + "' ";
+
+                        using (var Com = new SqlCommand(Query, Con))
+                        {
+                            Qs = new QuestionStructure();
+
+                            Db.Reader = Com.ExecuteReader();
+
+                            while (Db.Reader.Read())
+                            {
+                                DataRow Drow = Dt.NewRow();
+
+                                questionNumber = Convert.ToInt32(Db.Reader["qtn_number"].ToString());
+                                Drow["Question Number"] = Convert.ToInt32(Db.Reader["qtn_number"].ToString());
+                                Drow["Question"] = Db.Reader["detail"].ToString();
+                                Drow["Question Type"] = Convert.ToInt32(Db.Reader["qtn_type"].ToString());
+
+                                Qs.QuestionNumber = Convert.ToInt32(Db.Reader["qtn_number"].ToString());
+                                Qs.Question = Db.Reader["detail"].ToString();
+                                Qs.QuestionType = Convert.ToInt32(Db.Reader["qtn_type"].ToString());
+
+
+                                if (Convert.ToInt32(Db.Reader["qtn_type"].ToString()) == 2 || Convert.ToInt32(Db.Reader["qtn_type"].ToString()) == 3)
+                                {
+                                    //Task Run on a different thread to operate Objectives
+
+                                    Task QuestionObjectives = Task.Run(() =>
+                                         {
+                                             object[] Objs = new object[] { };
+
+                                             List<ObjectivesContent> ObjsList = new List<ObjectivesContent>();
+
+                                             using (var con = new SqlConnection(GC.ConnectionString))
+                                             {
+                                                 con.Open();
+
+                                                 string Query2 = "select obj_detail,validity from temporary_objectives inner join Temporary_Questions on Temporary_Objectives.qtn_id=Temporary_Questions.qtn_id where Temporary_Objectives.set_id=(select Tests.set_id from Tests where Tests.Test_code='" + this.TestCode + "') and Temporary_Questions.qtn_number='" + this.MyQuestionNumber + "'";
+
+                                                 using (var com = new SqlCommand(Query2, con))
+                                                 {
+
+                                                     SqlDataReader reader = com.ExecuteReader();
+                                                     int i = 0;
+
+                                                     while (reader.Read())
+                                                     {
+
+                                                         ObjectivesContent Ob = new ObjectivesContent();
+
+                                                         Ob.Detail = reader["obj_detail"].ToString();
+                                                         Ob.validity = Convert.ToInt32(reader["validity"].ToString());
+
+
+
+                                                         ObjsList.Add(Ob);
+
+                                                     }
+
+                                                     Objs = ObjsList.ToArray();
+
+                                                     Drow["Objective Data"] = Objs;
+
+                                                     Qs.Objectives = Objs;
+
+                                                     com.Dispose();
+                                                 }
+
+                                                 con.Close();
+                                             }
+
+
+                                         });
+
+                                    QuestionObjectives.Wait();
+
+
+                                }
+
+                                else
+                                {
+
+                                }
+
+                                Dt.Rows.Add(Drow);
+                            }
+
+
+
+
+                            Com.Dispose();
+                        }
+
+                        Con.Close();
+
+                        
+                    }
+                    return true;
+                }
+
+                else
+                {
+                    return false;
+                }
+            }
+
+            private bool CheckForQuestionExistance(string TestCode,int QuestionNumber)
+            {
+                using (var con = new SqlConnection(GC.ConnectionString))
+                {
+                    con.Open();
+
+                    string Query = "select [dbo].[CheckForQuestionExistance](@TestCode,@QuestionNumber)";
+
+                    using (var com = new SqlCommand(Query, con))
+                    {
+
+                        com.Parameters.Add(new SqlParameter("@TestCode", TestCode));
+                        com.Parameters.Add(new SqlParameter("@QuestionNumber",QuestionNumber));
+
+                        var t = com.ExecuteScalar();
+
+                        int returns = (int)t;
+
+                        if (returns == 1)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                
+                }
+
+            }
+
+            public void RetrieveData()
+            {
+                using (var Con = new SqlConnection(GC.ConnectionString))
+                {
+//                    Db.CreateConnection();
+
+                    Con.Open();
+
+                    string Query = "Select qtn_number,detail,qtn_type from Temporary_Questions inner join Tests on Temporary_Questions.set_id=Tests.set_id where Tests.set_id=(select Tests.set_id from tests where Tests.Test_code='"+this.TestCode+"')";
+
+                    using (var Com = new SqlCommand(Query,Con))
+                    {
+                        
+                        DataTable Dt = new DataTable("QuestionnaireTable");
+
+                        Dt.Columns.Add("Question Number", typeof(int));
+                        Dt.Columns.Add("Question", typeof(string));
+                        Dt.Columns.Add("Question Type", typeof(int));
+                        Dt.Columns.Add("Objective Data",typeof(string[]));
+
+                        Db.Reader = Com.ExecuteReader();
+
+                        while (Db.Reader.Read())
+                        {
+                            DataRow Drow = Dt.NewRow();
+
+                            questionNumber = Convert.ToInt32(Db.Reader["qtn_number"].ToString());
+                            Drow["Question Number"]=Convert.ToInt32(Db.Reader["qtn_number"].ToString());
+                            Drow["Question"] = Db.Reader["detail"].ToString();
+                            Drow["Question Type"]=Convert.ToInt32(Db.Reader["qtn_type"].ToString());
+
+
+                            if (Convert.ToInt32(Db.Reader["qtn_type"].ToString()) == 2 || Convert.ToInt32(Db.Reader["qtn_type"].ToString()) == 3)
+                            {
+                                //Task Run on a different thread to operate Objectives
+
+                                Task QuestionObjectives = Task.Run(() =>
+                                     {
+
+                                         string[] Objs = null;
+
+                                         List<string> ObjsList = new List<string>();
+                                         using (var con = new SqlConnection(GC.ConnectionString))
+                                         {
+                                             con.Open();
+
+                                             string Query2 = "select obj_detail from temporary_objectives inner join Temporary_Questions on Temporary_Objectives.qtn_id=Temporary_Questions.qtn_id where Temporary_Objectives.set_id=(select Tests.set_id from Tests where Tests.Test_code='" + this.TestCode + "') and Temporary_Questions.qtn_number='" + this.MyQuestionNumber + "'";
+
+                                             using (var com = new SqlCommand(Query2, con))
+                                             {
+
+                                                 SqlDataReader reader = com.ExecuteReader();
+
+                                                 while (reader.Read())
+                                                 {
+
+                                                     ObjsList.Add(reader["obj_detail"].ToString());
+
+
+                                                 }
+
+                                                 Objs = ObjsList.ToArray();
+
+                                                 Drow["Objective Data"] = Objs;
+
+
+                                                 com.Dispose();
+                                             }
+
+                                             con.Close();
+                                         }
+
+
+                                     });
+
+                                QuestionObjectives.Wait();
+
+                                
+                            }
+
+                            else
+                            {
+
+                            }
+
+                            Dt.Rows.Add(Drow);
+                        }
+
+                        Ds.Tables.Add(Dt);
+
+
+                        Com.Dispose();
+                    }
+
+                    Con.Close();
+                }
+            }
+
+        }
+
+        internal class ObjectivesObj
+        {
+            GlobalConnection GC = new GlobalConnection();
+            private string TestCode;
+            private string[] Objectives;
+            private DataSet Ds = new DataSet();
+        
+
+
+            public ObjectivesObj(string TestCode)
+            {
+                this.TestCode = TestCode;
+
+                RetrieveObjectives();
+            }
+
+            public ObjectivesObj(string TestCode,int QuestionNumber)
+            {
+                this.TestCode = TestCode;
+
+                RetrieveObjectives(QuestionNumber);
+            }
+
+
+            public DataSet DataSet
+            {
+                get
+                {
+                    return Ds;
+                }
+            }
+
+
+            private void RetrieveObjectives()
+            {
+                using (var con = new SqlConnection(GC.ConnectionString))
+                {
+                    con.Open();
+
+                    string Query = "select qtn_number,obj_detail,validity from temporary_objectives inner join Temporary_Questions on Temporary_Objectives.qtn_id=Temporary_Questions.qtn_id where Temporary_Objectives.set_id=(select Tests.set_id from Tests where Tests.Test_code='"+this.TestCode+"')";
+
+                    using (var com = new SqlCommand(Query,con))
+                    {
+                       
+
+                        DataTable Dt = new DataTable("ObjectivesTable");
+
+                        Dt.Columns.Add("Question Number", typeof(int));
+                        Dt.Columns.Add("Objective", typeof(string));
+                        Dt.Columns.Add("Validity", typeof(int));
+
+                        
+
+                        SqlDataReader reader = com.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            DataRow Drow = Dt.NewRow();
+                            Drow["Question Number"] = Convert.ToInt32(reader["qtn_number"].ToString());
+                            Drow["Objective"] = reader["obj_detail"].ToString();
+                            Drow["Validity"]=Convert.ToInt32(reader["validity"].ToString());
+
+                            Dt.Rows.Add(Drow);
+                        }
+
+                        Ds.Tables.Add(Dt);
+
+                        com.Dispose();
+                    }
+
+                    con.Close();
+                }
+            }
+
+
+            private void RetrieveObjectives(int QuestionNumber)
+            {
+                using (var con = new SqlConnection(GC.ConnectionString))
+                {
+                    con.Open();
+
+                    string Query = "select qtn_number,obj_detail,validity from temporary_objectives inner join Temporary_Questions on Temporary_Objectives.qtn_id=Temporary_Questions.qtn_id where Temporary_Objectives.set_id=(select Tests.set_id from Tests where Tests.Test_code='" + this.TestCode + "') and Temporary_Questions.qtn_number='"+QuestionNumber+"'";
+
+                    using (var com = new SqlCommand(Query, con))
+                    {
+
+
+                        DataTable Dt = new DataTable("ObjectivesTable");
+
+                        Dt.Columns.Add("Question Number", typeof(int));
+                        Dt.Columns.Add("Objective", typeof(string));
+                        Dt.Columns.Add("Validity", typeof(int));
+
+
+
+                        SqlDataReader reader = com.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            DataRow Drow = Dt.NewRow();
+                            Drow["Question Number"] = Convert.ToInt32(reader["qtn_number"].ToString());
+                            Drow["Objective"] = reader["obj_detail"].ToString();
+                            Drow["Validity"] = Convert.ToInt32(reader["validity"].ToString());
+
+                            Dt.Rows.Add(Drow);
+                        }
+
+                        Ds.Tables.Add(Dt);
+
+                        com.Dispose();
+                    }
+
+                    con.Close();
+                }
+            }
+
+        }
+
+    }
+}

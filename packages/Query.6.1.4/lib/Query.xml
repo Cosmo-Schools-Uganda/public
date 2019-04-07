@@ -1,0 +1,346 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Query</name>
+    </assembly>
+    <members>
+        <member name="T:QueryLibrary.Query">
+            <summary>
+            A simplistic ADO.NET wrapper.
+            </summary>
+        </member>
+        <member name="M:QueryLibrary.Query.ChangeExactlyOne(System.String,System.Object)">
+            <summary>
+            Runs the given query giving no return.
+            Throws UnexpectedNumberOfRowsAffected if more than one or none row is affected.
+            It uses DbCommand.ExecuteNonQuery underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If more than one or none row is affected
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.ChangeNoMoreThanOne(System.String,System.Object)">
+            <summary>
+            Runs the given query giving no return.
+            Throws UnexpectedNumberOfRowsAffected if more than one row is affected.
+            It uses DbCommand.ExecuteNonQuery underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If more than one row is affected
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectExactlyOne(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if more than one or none row is selected.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>A DataTable with the queried values</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If more than one or none row is selected
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectExactlyOne``1(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if more than one or none row is selected.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>The queried object</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If more than one or none row is selected
+            </exception>
+            <exception cref="T:ObjectLibrary.MismatchedTypesException">
+            The corresponding type in the given class is different than the one found in the DataTable
+            </exception>
+            <exception cref="T:ObjectLibrary.PropertyNotFoundException">
+            A column of the DataTable doesn't match any in the given class
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectNoMoreThanOne(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if more than one row is selected.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>A DataTable with the queried values</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsSelectedException">
+            If more than one row is selected
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectNoMoreThanOne``1(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if more than one row is selected.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>The querie objects</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsSelectedException">
+            If more than one row is selected
+            </exception>
+            <exception cref="T:ObjectLibrary.MismatchedTypesException">
+            The corresponding type in the given class is different than the one found in the DataTable
+            </exception>
+            <exception cref="T:ObjectLibrary.PropertyNotFoundException">
+            A column of the DataTable doesn't match any in the given class
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.#ctor(System.String)">
+            <summary>
+            Ctor.
+            </summary>
+            <param name="connectionStringName">Connection string name to be read from the .config file</param>
+        </member>
+        <member name="M:QueryLibrary.Query.#ctor(System.String,QueryLibrary.QueryOptions)">
+            <summary>
+            Ctor.
+            </summary>
+            <param name="connectionStringName">Connection string name to be read from the .config file</param>
+            <param name="options">Configuration options</param>
+        </member>
+        <member name="M:QueryLibrary.Query.#ctor(System.Configuration.ConnectionStringSettings)">
+            <summary>
+            Ctor.
+            </summary>
+            <param name="cs">Connection string settings</param>
+        </member>
+        <member name="M:QueryLibrary.Query.#ctor(System.Configuration.ConnectionStringSettings,QueryLibrary.QueryOptions)">
+            <summary>
+            Ctor.
+            </summary>
+            <param name="cs">Connection string settings</param>
+            <param name="options">Configuration options</param>
+        </member>
+        <member name="M:QueryLibrary.Query.Close">
+            <summary>
+            Closes and commit any underlying connection and transaction that were open automatically.
+            Does nothing if ManualClosing is False.
+            </summary>
+        </member>
+        <member name="M:QueryLibrary.Query.Dispose">
+            <summary>
+            Disposes any open underlying connection or transaction.
+            Only need when ManualClosing is set to True.
+            </summary>
+        </member>
+        <member name="M:QueryLibrary.Query.ChangeNoMoreThan(System.Int32,System.String,System.Object)">
+            <summary>
+            Runs the given query giving no return.
+            Throws UnexpectedNumberOfRowsAffected if the number of affected rows is greater than N.
+            It uses DbCommand.ExecuteNonQuery underneath.
+            </summary>
+            <param name="n">Maximum of affected rows to ensure</param>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If the number of affected rows is greater than N
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.ChangeExactly(System.Int32,System.String,System.Object)">
+            <summary>
+            Runs the given query giving no return.
+            Throws UnexpectedNumberOfRowsAffected if the number of affected rows is different from N.
+            It uses DbCommand.ExecuteNonQuery underneath.
+            </summary>
+            <param name="n">Number of affected rows to ensure</param>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If the number of affected rows is different from N
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.Change(System.String,System.Object)">
+            <summary>
+            Runs the given query giving no return.
+            It uses DbCommand.ExecuteNonQuery underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectNoMoreThan(System.Int32,System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if the number of selected rows is greater than N.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="n">Number of selected rows to ensure</param>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>A DataTable with the queried values</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsSelectedException">
+            If the number of selected rows is greater than N
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectNoMoreThan``1(System.Int32,System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if the number of selected rows is greater than N.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="n">Number of selected rows to ensure</param>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>The queried objects</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsSelectedException">
+            If the number of selected rows is greater than N
+            </exception>
+            <exception cref="T:ObjectLibrary.MismatchedTypesException">
+            The corresponding type in the given class is different than the one found in the DataTable
+            </exception>
+            <exception cref="T:ObjectLibrary.PropertyNotFoundException">
+            A column of the DataTable doesn't match any in the given class
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectExactly(System.Int32,System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if the number of selected rows is different from N.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="n">Number of selected rows to ensure</param>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>A DataTable with the queried values</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If the number of selected rows is different from N
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectExactly``1(System.Int32,System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            Throws UnexpectedNumberOfRowsSelected if the number of selected rows is different from N.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="n">Number of selected rows to ensure</param>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>The queried objects</returns>
+            <exception cref="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            If the number of selected rows is different from N
+            </exception>
+            <exception cref="T:ObjectLibrary.MismatchedTypesException">
+            The corresponding type in the given class is different than the one found in the DataTable
+            </exception>
+            <exception cref="T:ObjectLibrary.PropertyNotFoundException">
+            A column of the DataTable doesn't match any in the given class
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.Select(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>A DataTable with the queried values</returns>
+        </member>
+        <member name="M:QueryLibrary.Query.Select``1(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried values.
+            It uses DbDataAdapter.Fill underneath.
+            </summary>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>The queried objects</returns>
+            <exception cref="T:ObjectLibrary.MismatchedTypesException">
+            The corresponding type in the given class is different than the one found in the DataTable
+            </exception>
+            <exception cref="T:ObjectLibrary.PropertyNotFoundException">
+            A column of the DataTable doesn't match any in the given class
+            </exception>
+        </member>
+        <member name="M:QueryLibrary.Query.SelectSingle``1(System.String,System.Object)">
+            <summary>
+            Runs the given query and returns the queried value.
+            Only a single value (first column of the first row) is returned.
+            It uses DbCommand.ExecuteScalar underneath.
+            </summary>
+            <typeparam name="T">Type of the value to be returned</typeparam>
+            <param name="sql">Query to run</param>
+            <param name="parameters">Parameters names and values pairs</param>
+            <returns>The first column of the first row queried</returns>
+        </member>
+        <member name="T:QueryLibrary.QueryOptions">
+            <summary>
+            Query options.
+            </summary>
+        </member>
+        <member name="M:QueryLibrary.QueryOptions.op_Equality(QueryLibrary.QueryOptions,QueryLibrary.QueryOptions)">
+            <summary>
+            Determines whether the given instances are equal.
+            </summary>
+            <param name="o1">A instance to compare</param>
+            <param name="o2">Another instance to compare</param>
+            <returns>True if they are equal, False otherwise</returns>
+        </member>
+        <member name="M:QueryLibrary.QueryOptions.op_Inequality(QueryLibrary.QueryOptions,QueryLibrary.QueryOptions)">
+            <summary>
+            Determines whether the given instances are not equal.
+            </summary>
+            <param name="o1">A instance to compare</param>
+            <param name="o2">Another instance to compare</param>
+            <returns>True if they are not equal, False otherwise</returns>
+        </member>
+        <member name="M:QueryLibrary.QueryOptions.Equals(System.Object)">
+            <summary>
+            Determines whether this instance is equal to the given one.
+            </summary>
+            <param name="obj">Given instance</param>
+            <returns>True if they are equal, False otherwise</returns>
+        </member>
+        <member name="M:QueryLibrary.QueryOptions.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>A hash code for this instance</returns>
+        </member>
+        <member name="P:QueryLibrary.QueryOptions.ArrayAsInClause">
+            <summary>
+            Flag indicating if arrays should be expanded to IN clauses.
+            </summary>
+        </member>
+        <member name="P:QueryLibrary.QueryOptions.EnumAsString">
+            <summary>
+            Flag indicating if enum values should be treated as strings (ToString).
+            </summary>
+        </member>
+        <member name="P:QueryLibrary.QueryOptions.ManualClosing">
+            <summary>
+            Flag indicating if closing the connection/transaction should be done manually by the library consumer.
+            If False it automatically opens/closes on each API call.
+            </summary>
+        </member>
+        <member name="P:QueryLibrary.QueryOptions.Safe">
+            <summary>
+            Flag indicating if it's to throw if a selected property is not found in the given type.
+            </summary>
+        </member>
+        <member name="T:QueryLibrary.UnexpectedNumberOfRowsSelectedException">
+            <summary>
+            Exception thrown when a query selects an unexpected number of rows.
+            </summary>
+        </member>
+        <member name="T:QueryLibrary.QueryException">
+            <summary>
+            Query's base exception class.
+            </summary>
+        </member>
+        <member name="T:QueryLibrary.UnexpectedNumberOfRowsAffectedException">
+            <summary>
+            Exception thrown when a query affects an unexpected number of rows.
+            </summary>
+        </member>
+    </members>
+</doc>
